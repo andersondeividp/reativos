@@ -1,0 +1,50 @@
+#define LED_PIN 9
+#define BUT_PIN_1 7
+#define BUT_PIN_2 13
+
+int nivel = 1;
+int valor_default_led = 500;
+int limitador = valor_default_led * nivel;
+int teste_but_1 = false;
+int teste_but_2 = false;
+int contador_millis = 0;
+int contador_millis_but = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(BUT_PIN_1,INPUT);
+  pinMode(BUT_PIN_2,INPUT);
+  pinMode(LED_PIN,OUTPUT);
+}
+
+void loop() {   
+  int m = millis();
+  int limite = contador_millis + (valor_default_led / (nivel < 1 ? 1 : nivel));
+  if(m > limite){
+    contador_millis = m;
+    int atual =  digitalRead(LED_PIN);
+    digitalWrite(LED_PIN, !atual);    
+  } 
+  
+  int but1 = digitalRead(BUT_PIN_1);  
+  if(but1 == LOW && teste_but_1 == false){
+    nivel++;
+    teste_but_1 = true;    
+    contador_millis_but = m;
+  }else if(but1 == HIGH && teste_but_1 == true){
+    teste_but_1 = false;
+  }
+
+  int but2 = digitalRead(BUT_PIN_2);  
+  if(but2 == LOW && teste_but_2 == false && nivel > 0){
+    
+    nivel--;
+    teste_but_2 = true;
+    if(contador_millis_but > 0 && (m - contador_millis_but <= 500))
+      while(1);
+  }else if(but2 == HIGH && teste_but_2 == true){
+    teste_but_2 = false;
+  }
+
+      
+}
