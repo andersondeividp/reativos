@@ -1,0 +1,28 @@
+#define LED_PIN 9
+#define BUT_PIN 13
+
+int cMillis = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(BUT_PIN,INPUT);
+  pinMode(LED_PIN,OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:  
+  int but = digitalRead(BUT_PIN); 
+  if(but == LOW){
+    digitalWrite(LED_PIN, HIGH);
+    while(1);
+  }else{
+    int c = millis();    
+    if(cMillis > 0)
+      c = c / cMillis;      
+    if(c >=  1000){
+      cMillis++;
+      int atual =  digitalRead(LED_PIN);
+      digitalWrite(LED_PIN, !atual);
+    }          
+  }
+}
